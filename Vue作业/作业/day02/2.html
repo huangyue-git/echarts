@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="../../js/vue.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<!--单击按钮，实现 学生信息表的排序功能-->
+		 <div id="app">
+			 <table border="1" cellspacing="0" cellpadding="6">
+			 	<tr><th colspan="5">{{title}}</th></tr>
+			 	<tr><th>姓名</th><th>性别</th><th>学号</th><th>年龄</th><th>联系方式</th></tr>
+				<tr v-for="item in list"><td v-for="item2 in item">{{item2}}</td></tr>
+			 </table><br>	
+			 <button type="button" @click="sortarr" :disabled="type">对学生年龄进行升序排序</button>
+			 <br>
+			 <br>
+			 <table border="1" cellspacing="0" cellpadding="6">
+			 	<tr><th colspan="5">{{title}}</th></tr>
+			 	<tr><th>姓名</th><th>性别</th><th>学号</th><th>年龄</th><th>联系方式</th></tr>
+			 	<tr v-for="item in list2"><td v-for="item2 in item">{{item2}}</td></tr>
+			 </table>
+		 </div>		 
+		 <script type="text/javascript">
+		 	var vm = new Vue({
+				el:"#app",
+				data:{
+					title:"学生信息表",
+					type:false,
+					list:[
+							['张三',"男",16060201,23,15356562236],
+							['小花',"女",16060202,18,16354632434],
+							['小明',"男",16060203,21,17847756435],
+							['李四',"女",16060204,17,14635463554],
+							['王五',"男",16060205,28,12644575656],
+					],
+					list2:[]
+				},
+				methods:{
+					sortarr:function(){
+						console.log(this.list);
+						var arr = [];
+						for(var i = 0;i < this.list.length;i++){
+							arr.push(this.list[i][3]);
+						}
+						arr.sort(function(a,b){
+							return a - b;
+						})
+						console.log(arr);
+						for(var i = 0;i < this.list.length;i++){
+							for(var j = 0;j < this.list.length;j++){
+								if(arr[i] == this.list[j][3]){
+									this.list2.push(this.list[j]);
+									break;
+								}
+							}
+							
+						}
+						this.type = "true";
+					}
+					
+				}
+			})
+		 </script>
+	</body>
+</html>
