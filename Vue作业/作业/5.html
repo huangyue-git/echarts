@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="../js/vue.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<!-- 
+		学生信息表
+		姓名 学号 性别 联系方式
+		 -->
+		 <div id="app">
+			 <table border="1" cellspacing="0" cellpadding="6">
+			 	<tr><th colspan="5">{{title}}</th></tr>
+			 	<tr><th>姓名</th><th>性别</th><th>学号</th><th>籍贯</th><th>联系方式</th></tr>
+				<tr v-for="item in list"><td v-for="item2 in item">{{item2}}</td></tr>
+			 </table>
+		 	
+		 </div>
+		 
+		 <script type="text/javascript">
+		 	var vm = new Vue({
+				el:"#app",
+				data:{
+					title:"学生信息表",
+					list:[
+							['张三',"男",16060201,"四川成都",15356562236],
+							['小花',"女",16060202,"广东深圳",16354632434],
+							['小明',"男",16060203,"广东广州",17847756435],
+							['李四',"女",16060204,"广东东莞",14635463554],
+							['王五',"男",16060205,"广东惠州",12644575656],
+					]
+				}
+			})
+		 </script>
+	</body>
+</html>
