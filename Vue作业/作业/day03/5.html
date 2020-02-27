@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="../../js/vue.js" type="text/javascript"></script>
+		<script src="city.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<div id="app">
+			<!-- 省市三级联动-->
+			省 
+			<select v-model="provinceName">
+				<option v-for="(item,index) in provinces" :value ="item.name">{{item.name}}</option>
+			</select>
+			市
+			<select v-model="cityName">
+				<option v-for="(item,index) in city" :value ="item.name">{{item.name}}</option>
+			</select>
+			区
+			<select v-model="areaName">
+				<option v-for="(item,index) in areas" :value ="item">{{item}}</option>
+			</select>
+		</div>
+		
+		<script type="text/javascript">
+			var vm = new Vue({
+				el:"#app",
+				data:{
+					provinces:citys,
+					provinceName:"北京市",
+					city:[],
+					cityName:"",
+					areas:[],
+					areaName:""					
+				},
+				watch:{
+					// 当省发生变化时，修改对应市的数据，并市为的默认值赋值
+					provinceName(newValue){
+						this.provinces.forEach(item =>{
+							if(item.name == newValue){
+								this.city = item.city;
+								this.cityName = item.city[0].name;
+							}
+						})
+					},
+					// 当市发生变化时，修改对应区的数据，并为区的默认值赋值
+					cityName(newValue){
+						this.city.forEach(item=>{
+							if(item.name == newValue){
+								this.areas = item.area;
+								this.areaName = item.area[0];
+							}
+						})
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
