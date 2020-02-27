@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="../../js/vue.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<!-- 3.学生表格实现搜索某位同学的功能，最好还能搜索拼音 -->
+		 <div id="app">
+			 请输入学生姓名或姓名拼音进行搜索<br/><br/>
+			 <input type="text"  v-model="input"/><button @click="search">搜索</button><br/><br/>
+			 {{message}}
+			 <table border="1" cellspacing="0" cellpadding="6">
+			 	<tr><th colspan="5">{{title}}</th></tr>
+			 	<tr><th>姓名</th><th>性别</th><th>学号</th><th>籍贯</th><th>联系方式</th></tr>
+				<tr v-for="item in list"><td v-for="item2 in item">{{item2}}</td></tr>
+			 </table>		 	
+		 </div>		 
+		 <script type="text/javascript">
+		 	var vm = new Vue({
+				el:"#app",
+				message:"",
+				input:"",
+				data:{
+					title:"学生信息表",
+					list:[
+							['张三',"男",16060201,"四川成都",15356562236],
+							['小花',"女",16060202,"广东深圳",16354632434],
+							['小明',"男",16060203,"广东广州",17847756435],
+							['李四',"女",16060204,"广东东莞",14635463554],
+							['王五',"男",16060205,"广东惠州",12644575656],
+					]
+				},
+				methods:{
+					search:function(){
+						let count = 0;
+						this.list.filter(item => {
+						      if (item[0] == this.input) {
+								  count++;
+						      }
+						    })
+						if(count > 0){
+							this.message = "找到了该学生";
+						}else{
+							this.message = "没有该学生";
+						}
+						console.log(this.message);
+					}
+				}
+			})
+		 </script>
+	</body>
+</html>
