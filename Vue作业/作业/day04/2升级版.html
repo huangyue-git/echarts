@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			*{padding:0;margin:0;}
+			ul,li{list-style:none;}
+			#app{margin: 5px;}
+			.top,.bottom,.middle{margin: 10px;}
+			.list{display: flex;overflow: scroll;}
+			h3{margin-left: 8px;}
+			.list li img{width: 6.25rem;height: 8.9275rem;margin: 8px 0 8px 8px;}
+			.list li .tt{text-align: center;height: 1.875rem;line-height: 1.875rem;width: 6.75rem;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+			.list li .score{text-align: center;font-size: 12px;color: #818181;}
+		</style>
+		<meta name="viewport" content="width=device-width">
+		<script src="../../js/vue.js" type="text/javascript"></script>
+		<script src="../../js/axios.min.js" type="text/javascript"></script>		
+	</head>
+	<body>
+		<div id="app">
+			<!-- 电视剧部分 -->			
+			<baselist :list = "dianshiju" text = "国产剧"></baselist>
+			<!-- 综艺部分 -->
+			<baselist :list = "zongyi" text = "综艺"></baselist>
+			<!-- 英美剧部分 -->
+			<baselist :list = "yingmei" text = "英美剧"></baselist>
+		</div>		
+		<script type="text/javascript">
+			// 组件的定义
+			// li组件
+			var myli = {
+				props:['i'],
+				template:
+					`<li>
+						<img :src="i.cover.url" title="i.title"/>
+						<div class="tt">{{i.title}}</div>	
+						<div v-for="(i,key) in i.rating" class="score">
+							{{key=="value"?"评分："+i:""}}
+						</div>
+					</li>`
+			}			
+			// 电视剧部分组件
+			var baselist = {
+				props:['list','text'],
+				template:
+					`<div class="top">
+						<h3>近期值得看的{{text}}</h3>
+						<ul class="list">
+							<myli v-for="item in list" :i = "item"></myli>
+						</ul>
+					</div>`,
+				components:{
+					myli
+				}
+			}
+			// 创建一个Vue实例
+			var vm = new Vue({
+				el:"#app",
+				data:{
+					dianshiju:[],
+					zongyi:[],
+					yingmei:[],
+				},
+				components:{
+					baselist
+				},
+				mounted:function(){
+					axios.get('dianshiju.json').then((data)=>{//成功获取数据的回调函数
+						console.log(data);
+						this.dianshiju = data.data.subject_collection_items;
+						return axios.get('zongyi.json');
+					}).catch((error)=>{//失败的回调函数
+						console.log(error);
+					}).then((data)=>{
+						console.log(data);
+						this.zongyi = data.data.subject_collection_items;
+						return axios.get('yingmei.json');
+					}).catch((error)=>{//失败的回调函数
+						console.log(error);
+					}).then((data)=>{
+						console.log(data);
+						this.yingmei = data.data.subject_collection_items;
+					}).catch((error)=>{//失败的回调函数
+						console.log(error);
+					})
+				}
+			})
+		</script>
+	</body>
+</html>
