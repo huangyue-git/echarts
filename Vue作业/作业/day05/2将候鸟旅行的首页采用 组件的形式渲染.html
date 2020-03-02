@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="../../js/axios.min.js" type="text/javascript"></script>
+		<script src="../../js/vue.js" type="text/javascript"></script>
+		<meta name="viewport" content="width=device-width"/>
+		<link rel="stylesheet" href="./swiper/idangerous.swiper.css">
+		<script src="./swiper/idangerous.swiper.min.js"></script>
+		<!-- <script src="./swiper/idangerous.swiper.js"></script> -->
+		<style>
+		    *{margin: 0;padding: 0;}  
+		    html,body{font-family: "Microsoft Yahei",Tahoma,Arial,sans-serif;font-size: 18px;}			
+		    #main {width: 750px;height: 398px;background-color: #333333;position: relative;}    
+		    .swiper-container {width: 42.3rem;height: 398px;} 
+			.swiper-container img{width: 42.3rem;height: 398px;}
+		    .pagination {position: absolute; left: 0;text-align: center; bottom:15px; width: 100%; z-index: 5;}   
+		    .swiper-pagination-switch {display: inline-block; width: 17px;height: 17px; border-radius: 10px;background: #999;box-shadow: 0px 1px 2px #555 inset;margin: 0 8px;cursor: pointer; }
+		    .swiper-active-switch {background: #fff; }		    
+		    ul,li{list-style: none;}
+		    #nav{width: 750px;height: 50px; display: flex; margin: 30px 0;  justify-content: space-around;}
+		    #nav li{color: #ead1af;font-size: 24px;}
+		    #content li{display: flex;width: 750px;height: 180px;margin-left: 10px;margin-right: 10px;border-bottom: 1px dashed #858585;margin-top: 25px;}  
+		    #content li .left{width: 40%;display: flex;flex-direction: column;margin-right: 25px;}
+		    #content li .left img{width: 100%;}
+		    #content li .right{width: 60%;display: flex;flex-direction: column;}
+		    #content li .right span{margin-top: 6px;font-size: 28px;}
+		    #content li .right .right-middle{margin: 20px 0;}
+		    #content li .right .right-middle span{background: #e9e9e9;color: #484848;padding: 5px 10px;font-size: 24px;}
+		    #content li .right .right-bottom span{font-size: 24px;color: #858585;font-weight: normal;}
+		    #content li .right .right-bottom .r,.list .r{margin-left: 20px;}
+		    #content li .right .right-bottom .price{margin-left: 30px;font-style: normal;}
+			.list{display: flex;flex-direction: column;flex-wrap: wrap;width: 100%;}
+			.list li{width: 100%;margin-left: 20px;display: flex;flex-direction: column;}
+			.list li img{width: 290px;height: 154px;}
+			.tt{height:80px;line-height: 80px;text-align: center;font-size: 30px;border-bottom: 1px solid #b9b9b9;
+				width: 200%;border-top: 10px solid #eee;color: #858585;}
+			
+		</style>
+	</head>
+	<body>
+		<div id="main">
+		    <!-- 轮播部分 -->
+		    <div class="swiper-container">
+		        <!-- 轮播图片内容 -->
+		        <div class="swiper-wrapper">
+		            <div class="swiper-slide"><img src="https://pic.51houniao.com/fdab80a9e95d4014a4111f2b4551b272.png" alt=""></div>
+		            <div class="swiper-slide"><img src="https://pic.51houniao.com/b060e59417b345339615b61179b2d8b2.png" alt=""></div>
+		            <div class="swiper-slide"><img src="https://pic.51houniao.com/0473e9db84854efeb3d7f7b6dee5f806.png" alt=""></div>
+		            <div class="swiper-slide"><img src="https://pic.51houniao.com/b5615012680a46fb8c08f1b438eac0e7.png" alt=""></div>
+		            <div class="swiper-slide"><img src="https://pic.51houniao.com/fd73112dc2264005bab2addc2f938514.jpg" alt=""></div>
+		        </div>
+		    </div>
+		        <!--小圆点，分页器-->
+		    <div class="pagination"></div>
+		</div>
+		<div id="app">
+			<!-- 标题菜单 -->
+			<div>
+			    <ul id="nav">
+			        <li>省心</li>
+			        <li>品质</li>
+			        <li>私密</li>
+			        <li>专享</li>
+			    </ul>
+			</div>
+			
+			<!-- 推荐 -->
+			
+			<tuijian :tuijian = 'tuijian'></tuijian>
+			
+			<!-- 轮播图2招募活动 -->
+			
+			<!-- 猜你喜欢 -->
+			<youlike :gussyoulike = 'gussyoulike'></youlike>
+			<!-- 底部 -->
+		</div>
+		
+		<script type="text/javascript">
+			
+			// 组件的定义			
+			// 推荐
+			var tuijian = {
+				props:['tuijian'],
+				template:`<div>
+						    <ul id="content">
+							  <div class="tt">推荐</div>
+						        <li v-for = "item in tuijian">						            
+						            <div class="left">
+						                <img :src="item.proPicUrl" alt="">
+						            </div>						             
+						            <div class="right">
+						                <span>{{item.proTitle}}</span>
+						                <div class="right-middle">
+						                    <span>{{item.country}}</span>
+						                </div>
+						                <div class="right-bottom">
+						                    <span class="r">{{item.routingDat}}天{{item.routingNigth}}晚</span>
+						                    <span><em class="price">{{item.amount}}</em>元起</span>
+						                </div>
+						            </div>
+						        </li>
+						    </ul>
+						</div>`
+			}
+			
+			// 轮播图2招募活动
+			
+			
+			// 猜你喜欢
+			var youlike = {
+				props:['gussyoulike'],
+				template:`<div>					
+						    <ul  class = 'list'>
+							  <div class="tt">猜你喜欢</div>
+						        <li v-for = "item in gussyoulike">
+									<img :src="item.proPicUrl" alt="">						        					            						        
+									<span>{{item.proTitle}}</span>
+									<span>{{item.country}}</span>						                
+									<span class="r">  {{item.routingDat}}天{{item.routingNigth}}晚     <em class="price">{{item.amount}}</em>元起</span>														             
+						        </li>
+						    </ul>	
+						</div>`
+			}
+			
+			
+			var vm = new Vue({
+				el:"#app",
+				data:{
+					lunbo1:[],
+					tuijian:[],
+					lunbo2:[],
+					gussyoulike:[]
+				},
+				mounted:function(){
+					axios.get('lunbotu1.json').then((data)=>{//成功获取数据的回调函数
+						console.log(data.data);
+						this.lunbo1 = data.data;
+						return axios.get('houniao.json');
+					}).catch((error)=>{//失败的回调函数
+						console.log(error);
+					}).then((data)=>{
+						console.log(data.data);
+						this.tuijian = data.data;
+						return axios.get('lunbotu2.json');
+					}).catch((error)=>{//失败的回调函数
+						console.log(error);
+					}).then((data)=>{
+						console.log(data.data.matchedProducts);
+						this.lunbo2 = data.data.matchedProducts;
+						return axios.get('gussyoulike.json');
+					}).catch((error)=>{//失败的回调函数
+						console.log(error);
+					}).then((data)=>{
+						console.log(data.data);
+						this.gussyoulike = data.data;
+					})
+				},
+				components:{
+					tuijian,
+					youlike
+				}
+			})
+			
+			var mySwiper = new Swiper(".swiper-container", {
+			    // 开启循环
+			    loop: true,
+			    // 自动滑动时间间隔
+			    autoplay: 2000,
+			    // 指定分页器
+			    pagination: '.pagination',
+			    // 点击分页器的指示点时会发生Swiper
+			    paginationClickable: true
+			})
+		</script>
+	</body>
+</html>
