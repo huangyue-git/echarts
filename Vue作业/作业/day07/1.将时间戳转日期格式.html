@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<!-- 1.将时间戳转日期时间   timearr:['1579657789851','1563516693000','1578539380000'] -->		
+		<div id="app">
+			<ul>
+				<li v-for="(item,index) in timearr">
+					<span>{{item}}  转日期格式:{{item | todate()}}</span>
+				</li>
+			</ul>
+		</div>		
+		<script type="text/javascript">						
+			var vm = new Vue({
+				el:"#app",
+				data:{
+					timearr:['1579657789851','1563516693000','1578539380000']
+				},
+				filters:{
+					todate:function(value,arg){
+						console.log(value);
+						var year = parseInt(value/1000/3600/24/30/12) + 1970;
+						var month = parseInt(value/1000/3600/24/30%12);
+						var day = parseInt(value/1000/3600/24%30) + 1;
+						return (year + "年" + month + "月" +day + "日");
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

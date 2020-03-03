@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<!-- 2.保留小数后 几位数 -->
+		<div id="app">
+			{{num1}}
+			保留几位小数后
+			{{num1 | numberfun(2)}}
+		</div>		
+		<script type="text/javascript">						
+			var vm = new Vue({
+				el:"#app",
+				data:{
+					num1:13.2443757
+				},
+				filters:{
+					numberfun:function(value,arg){
+						console.log(value,arg);
+						var arr = value.toString().split('.');
+						return (arr[0] + '.'  + arr[1].substring(0,arg));
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

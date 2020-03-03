@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width"/>
+		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue-router.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			*{margin: 0;padding: 0;}
+			ul.li{list-style: none;}
+			a{text-decoration: none !important;}
+			#list{background-color: #004b9e;padding: 10px;height: 100%;border-radius: 10px;}
+			#list h2{color: white;font-weight: 400;padding-top: 10px;padding-bottom: 10px;}
+			.listli{padding:11px 15px;display: flex;flex-direction: row;flex-wrap: nowrap;}
+			.listli .left{width: 35%;margin-right: -25px;}
+			.listli .right{width: 65%;display: flex;flex-direction: column;padding-top: 16px}
+			.listli .right span:nth-of-type(1){color: #000;font-size: 18px;}
+			.listli .right span:nth-of-type(2){color: #999;font-size: 12px;margin-top: 3px;}
+			.listli .left img{width: 75px;height: 75px;border-radius: 6px;}
+			#list .listul{background-color: white;}
+			#list .listul li{border-bottom: 1px solid #ddd;}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<router-link to="/index">列表</router-link>
+			<router-link to="/itemlist"></router-link>
+			<router-view></router-view>
+		</div>
+		
+		<script type="text/javascript">
+			var myitem = {
+				data:function(){
+					return {
+						itemlist:[]
+					}
+				},				
+				template:`<div>
+							<div class="header">
+								内容页
+							</div>
+						</div>`,
+				watch:{
+					'$route'(to,from){}
+				},
+				mounted:function(){
+					axios.post("https://www.jvhv.com/siteindex.php/Lesson/Detail.html",
+					{
+					pro_id: 141,
+					fid:''}).then((res)=>{
+						console.log(res);
+					})
+				 }
+			}
+			
+			var mylist = {
+				data:function(){
+					return {
+						list:[]
+					}
+				},
+				template:`<div id="list">
+						<h2>本周最受欢迎TOP5</h2>
+							<ul class="listul">
+								<li v-for="(item,index) in list">
+								<router-link :to="'/itemlist/'+item.pro_id">
+									<div class="listli">
+										<div class="left" v-if="item.pro_img !== undefined">
+											<img :src="item.pro_img[0].url"/>
+										</div>
+										<div class="right" v-if="item.pro_Joiner !== undefined">
+											<span>{{item.pro_name}}</span>
+											<span>{{item.pro_Joiner}}人已参加</span>
+										</div>
+									</div>
+								</router-link>						
+								</li>
+							</ul>
+						  </div>`,
+				mounted:function(){
+					axios.get('https://www.jvhv.com/siteindex.php/Index/Index.html').then((data)=>{
+						console.log(data.data.data.CourseTop5);
+						this.list = data.data.data.CourseTop5;
+					})
+				}			
+			}
+			
+						
+			var routes = [
+				{path:'/index',component:mylist},
+				{path:'/itemlist/:idvalue',component:myitem}
+			]
+			
+			var router = new VueRouter({
+				routes:routes
+			})
+						
+			var vm = new Vue({
+				el:"#app",
+				data:{},
+				router:router
+			})
+		</script>
+	</body>
+</html>
