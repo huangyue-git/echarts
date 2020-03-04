@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width"/>
+		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue-router.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="../../css/swiper.min.css"/>
+		<style type="text/css">
+			*{margin: 0;padding: 0;}
+			ul.li{list-style: none;}
+			a{text-decoration: none !important;}
+			#list{background-color: #004b9e;padding: 10px;height: 100%;border-radius: 10px;}
+			#list h2{color: white;font-weight: 400;padding-top: 10px;padding-bottom: 10px;}
+			.listli{padding:11px 15px;display: flex;flex-direction: row;flex-wrap: nowrap;}
+			.listli .left{width: 35%;margin-right: -25px;}
+			.listli .right{width: 65%;display: flex;flex-direction: column;padding-top: 16px}
+			.listli .right span:nth-of-type(1){color: #000;font-size: 18px;}
+			.listli .right span:nth-of-type(2){color: #999;font-size: 12px;margin-top: 3px;}
+			.listli .left img{width: 75px;height: 75px;border-radius: 6px;}
+			#list .listul{background-color: white;}
+			#list .listul li{border-bottom: 1px solid #ddd;}
+			#itemlist{font-size: 14px;width: 100%;} 
+			#main {width: 100%;height: 250px;background-color: #333333;position: relative;} 
+			.swiper-container {width: 100%;height: 250px;}  
+			.swiper-container img{height:250px;width: 100%;}
+			#itemlist .content{width: 100%;padding: 15px 0px 0 15px}
+			#itemlist .content div{margin: 10px 0;}
+			.title{font-size: 24px;font-weight: 400;}
+			#itemlist .content .text{margin-left: 24px;}
+			#itemlist .content .price span{font-size: 23px;color: #ec1717;font-weight: bold;}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<router-link to="/index">列表</router-link>
+			<router-link to="/itemlist">内容页</router-link>
+			<router-view></router-view>
+		</div>		
+		<script type="text/javascript">					
+			var mylist = {
+				data:function(){
+					return {
+						list:[]
+					}
+				},
+				template:`<div id="list">
+						<h2>本周最受欢迎TOP5</h2>
+							<ul class="listul">
+								<li v-for="(item,index) in list">
+								<router-link :to="'/itemlist/'+item.pro_id">
+									<div class="listli">
+										<div class="left" v-if="item.pro_img !== undefined">
+											<img :src="item.pro_img[0].url"/>
+										</div>
+										<div class="right" v-if="item.pro_Joiner !== undefined">
+											<span>{{item.pro_name}}</span>
+											<span>{{item.pro_Joiner}}人已参加</span>
+										</div>
+									</div>
+								</router-link>						
+								</li>
+							</ul>
+						  </div>`,
+				mounted:function(){
+					axios.get('https://www.jvhv.com/siteindex.php/Index/Index.html').then((data)=>{
+						console.log(data.data.data.CourseTop5);
+						this.list = data.data.data.CourseTop5;
+					})
+				}			
+			}
+			
+			var myitem = {
+				data:function(){
+					return {
+						itemlist:[],
+						swiperArr:[]
+					}
+				},			
+				
+				template:`<div id="itemlist">
+							<div class="swiper-container">
+								<div class="swiper-wrapper">
+									<div class="swiper-slide" v-for="(item,index) in swiperArr">
+										<img :src="item.url" :alt="item.name"/>
+									</div>	
+								</div>
+								<div class="swiper-pagination"></div>
+								<div class="swiper-button-prev"></div>
+								<div class="swiper-button-next"></div>
+							</div>					
+							<div class="content">
+								<div class="title">{{itemlist.pro_name}}</div>
+								<div class="text">{{itemlist.pro_timestr}}</div>
+								<div>有效期：{{itemlist.pro_active_date_text}} |
+									<span>场地：{{itemlist.pro_placestr}}</span>
+								</div>
+								<div class="price" v-if="itemlist.pro_price!==undefined">
+									<span>{{itemlist.pro_price}}.0</span>元
+								</div>
+							</div>
+						</div>`,
+				watch:{
+					'$route'(to,from){}
+				},
+				mounted:function(){
+					//轮播图的初始化操作
+					var mySwiper = new Swiper ('.swiper-container', {
+						loop: true, // 循环模式选项
+						autoplay:true,
+						// 如果需要分页器
+						pagination: {
+						  el: '.swiper-pagination',
+						  clickable:true
+						},						
+						// 如果需要前进后退按钮
+						navigation: {
+						  nextEl: '.swiper-button-next',
+						  prevEl: '.swiper-button-prev',
+						},
+						observer:true					
+					  });
+					  
+					var pid = parseInt(this.$route.params.pro_id)
+					let params = new URLSearchParams();
+					params.append('pro_id',pid);
+					params.append('fid','')
+					axios.post("https://www.jvhv.com/siteindex.php/Lesson/Detail.html",params
+					).then((res)=>{
+						console.log(res);
+						this.itemlist = res.data.data;
+						this.swiperArr = res.data.data.pro_imglist;
+					})
+					
+					   
+				 }
+			}
+			
+						
+			var routes = [
+				{path:'/index',component:mylist},
+				{path:'/itemlist/:pro_id',component:myitem}
+			]
+			
+			var router = new VueRouter({
+				routes:routes
+			})
+						
+			var vm = new Vue({
+				el:"#app",
+				data:{},
+				router:router
+			})
+		</script>
+	</body>
+</html>

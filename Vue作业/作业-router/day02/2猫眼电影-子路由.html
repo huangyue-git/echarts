@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue-router.js" type="text/javascript" charset="utf-8"></script>
+		<meta name="viewport" content="width = device-width"/>
+		<style type="text/css">
+			.film,.cinema,.us{width: 400px;height: 300px;}
+			.main{display: flex;position: fixed;left: 10px;bottom: 20px;}
+			.main a{margin: 0 40px;}
+			.filmchildren,.uschildren{width: 93%;height: 500px;background-color: lightcyan;padding: 10px;}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<div class="main">
+				<router-link to="/film">电影</router-link>
+				<router-link to="/cinema">影院</router-link>
+				<router-link to="/us">我的</router-link>
+			</div>
+			<router-view></router-view>
+		</div>		
+		<script type="text/javascript">
+			// 创建组件
+			var film = {
+				template:`<div class="film">电影页面</br><br/>
+							<router-link to="/film/filmchild1">子页一</router-link>
+							<router-link to="/film/filmchild2">子页二</router-link><br/><br/>
+							<div class="filmchildren">
+								<router-view></router-view>
+							</div>
+						  </div>`
+			}
+			var cinema = {
+				template:`<div class="cinema">影院页面</div>`
+			}
+			var us = {
+				template:`<div class="us">我的页面</br><br/>
+								<router-link to="/us/uschild1">子页一</router-link>
+								<router-link to="/us/uschild2">子页二</router-link><br/><br/>
+								<div class="uschildren">
+									<router-view></router-view>
+								</div>
+							</div>`
+			}
+			var filmchild1={
+				template:`<div>正在热映页面</div>`
+			}
+			var filmchild2={
+				template:`<div>即将上映页面</div>`
+			}
+			var uschild1 ={
+				template:`<div>美团账号登录页面</div>`
+			}
+			var uschild2 ={
+				template:`<div>手机登录页面</div>`
+			}
+			var page404 = {
+				template:`<div>404页面
+				<button @click="goMain">返回首页</button>
+				</div>`,
+				methods:{
+					//返回首页
+					goMain:function(){
+						this.$router.push('/film');
+					}
+				}
+			}
+			// 创建路由配置信息
+			var routes = [
+				{"path":"/film/",redirect:'/film/filmchild1'},
+				{"path":"/us/",redirect:'/us/uschild1'},
+				{"path":"/",redirect:'/film'},			
+				{'path':'/film',children:[{'path':'filmchild1','component':filmchild1},{'path':'filmchild2','component':filmchild2}],'component':film},
+				{'path':'/cinema','component':cinema},
+				{'path':'/us',children:[{'path':'uschild1','component':uschild1},{'path':'uschild2','component':uschild2}],'component':us},
+				{'path':'/*','component':page404}
+			]
+			// 创建路由对象并配置
+			var router = new VueRouter({
+				routes:routes
+			})									
+			var vm = new Vue({
+				el:"#app",
+				data:{},
+				router:router
+			})
+		</script>
+	</body>
+</html>
