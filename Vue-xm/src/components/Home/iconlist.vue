@@ -1,9 +1,10 @@
 <template>
 		<div class="iconL">
 			<div class="list">
-				<div v-for="(item,index) in iconlist">
-					<!-- <img :src="item.appUrl" /> -->
-					<div></div>
+				<div v-for="(item,index) in iconlist">					
+					<div class="imgicon">
+						<img :src="require('../../assets/icon/'+(index+1)+'.png')" />
+					</div>
 					<span>{{item.CategoryName}}</span>
 				</div>
 			</div>
@@ -32,10 +33,11 @@
 
 <style scoped lang="scss">
 	.iconL{
-		width: 92%;height: 176px;margin: 10px 0;padding: 10px;
+		width: 94.7%;height: 176px;padding: 10px;border-top: 8px solid #eee;border-bottom: 8px solid #eee;
 		.list {
 			display: flex;flex-direction: row;flex-wrap: wrap;
 			div{width: 20%;padding: 10px 0;height: 63px;
+				.imgicon{text-align: center;width: 69px;}
 				span{text-align: center;width: 100%;padding-left: 16px;}
 				div{height: 38px;}
 			}

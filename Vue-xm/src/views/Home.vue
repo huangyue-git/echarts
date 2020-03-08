@@ -5,14 +5,18 @@
 			<input type="text" placeholder="输入搜索关键词"/>
 		</div>
 		<!--首页轮播图 -->
-		<lunbo1></lunbo1>
+		<myswiper :swiperArr = 'swiperArr' type='home' height='170px'></myswiper>
+		<!-- 首页图标 -->
 		<iconlist></iconlist>
+		<!-- 首页为你精选 -->
 		<courseforyou></courseforyou>
+		<!-- 本周最受欢迎TOP5 -->
 		<div id="list">
 			<h2>本周最受欢迎TOP5</h2>
-			<ul class="listul">
+			<ul class="listul">				
 				<li v-for="(item,index) in list">
-					<router-link :to="'/itemlist/'+item.pro_id">
+					<!-- 路由到内容页 -->
+					<router-link :to="'/myitem/'+item.pro_id">
 						<div class="listli">
 							<div class="left" v-if="item.pro_img !== undefined">
 								<img :src="item.pro_img[0].url"/>
@@ -32,8 +36,7 @@
 <script>
 // 引入axios
 import axios from 'axios';
-// @ is an alias to /src
-import lunbo1 from '@/components/Home/lunbo1.vue'
+import myswiper from '@/components/Home/myswiper.vue'
 import iconlist from '@/components/Home/iconlist.vue'
 import courseforyou from '@/components/Home/courseforyou.vue'
 export default {
@@ -41,28 +44,18 @@ export default {
   data:function(){
 	  return {
 		  list:[],
-		  lunbolist:[]
+		  lunbolist:[],
+		  swiperArr:[]
 	  }
   },
-  components:{lunbo1,iconlist,courseforyou},
+  components:{myswiper,iconlist,courseforyou},
   mounted:function(){
-	  //轮播图的初始化操作
-	  new Swiper('.swiper-container', {
-	         pagination: '.swiper-pagination',
-	         nextButton: '.swiper-button-next',
-	         prevButton: '.swiper-button-prev',
-	         paginationClickable: true,
-	  	   observer: true,
-	         spaceBetween: 30,
-	         centeredSlides: true,
-	         autoplay: 2500,
-	         autoplayDisableOnInteraction: false
-	     }),
 	  //获取数据
 	  axios.post("https://www.jvhv.com/siteindex.php/Index/Index.html").then((res)=>{
 	  	console.log(res.data.data.top_ad.list);
 	  	this.lunbolist = res.data.data.top_ad.list;
 		this.list = res.data.data.CourseTop5;
+		this.swiperArr = res.data.data.top_ad.list
 	  })
   }
 }
@@ -70,7 +63,8 @@ export default {
 
 <style scoped="scoped" lang="scss">
 	ul,li{list-style: none;}
-	#list{background-color: #004b9e;padding: 10px;height: 100%;border-radius: 10px;width: 325px;margin-left: 10px;}
+	#list{background-color: #004b9e;padding: 10px;height: 100%;border-radius: 10px;width: 325px;margin-left: 10px;
+	margin-bottom: 100px;}
 	#list h2{color: white;font-weight: 400;padding-top: 10px;padding-bottom: 10px;}
 	.listli{padding:11px 15px;display: flex;flex-direction: row;flex-wrap: nowrap;}
 	.listli .left{width: 35%;margin-right: -25px;}
@@ -84,5 +78,5 @@ export default {
 			height: 44px;background-color: #004b9e;line-height: 44px;
 			span{color: white;font-size: 14px;margin: 10px;}
 			input{height: 30px;padding: 0 10px;font-size: 14px;border-radius: 10px;width: 230px;margin-left: 10px;}
-			}
+		}
 </style>

@@ -3,11 +3,13 @@
 		<div class="h">为你精选</div>
 		<div class="li">
 			<div v-for="(item,index) in courseforyou" class="list">
-				<div class="listli">
-					<img :src="item.pro_img[0].url"  class="img"/>
-					<span class="title">{{item.pro_name}}</span>
-					<span class="join">{{item.pro_Joiner}}人已参加</span>
-				</div>
+				<router-link :to="'/myitem/'+item.pro_id">
+					<div class="listli">
+						<img :src="item.pro_img[0].url"  class="img"/>
+						<span class="title">{{item.pro_name}}</span>
+						<span class="join">{{item.pro_Joiner}}人已参加</span>
+					</div>
+				</router-link>
 			</div>
 		</div>
 	</div>

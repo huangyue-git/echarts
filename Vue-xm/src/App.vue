@@ -22,10 +22,15 @@
   </div>
 </template>
 
+<script>
+
+</script>
+
 <style lang="scss">
 *{margin: 0;padding: 0;}
 ul,li{padding: 0;margin: 0;}
-#main{margin-bottom: 80px;}
+#app{width: 100%;}
+#main{width: 100%;}
 #nav {
   background-color: white;
   margin-top: 3px;
