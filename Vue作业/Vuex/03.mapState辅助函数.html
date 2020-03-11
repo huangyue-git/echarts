@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width"/>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/vuex.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>	 
+		 <div id="app">
+			 获取vuex中的数据 :{{cc}}
+			 <ul>
+				 <li v-for="(item,index) in list">{{item.id}}  --- {{item.name}}  </li>
+			 </ul>
+		 </div>
+		 <script type="text/javascript">
+			 var mapState = Vuex.mapState;
+			 
+		 	var store = new Vuex.Store({
+				state:{
+					count:10,
+					list:[
+						{'id':1,'name':'hy'},
+						{'id':2,'name':'jack'},
+						{'id':3,'name':'rose'}
+					]
+				}
+			})			
+			var vm = new Vue({
+				el:"#app",
+				data:{},
+				computed:{
+					...mapState({
+						//将store中的state里面的值和props中的值进行了映射
+						cc:state=>state.count,
+						list:state=>state.list
+					})
+				},
+				store:store
+			})
+		 </script>
+	</body>
+</html>

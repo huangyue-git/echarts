@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/vuex.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="app">
+			获取store中的数据{{count}}
+			<button @click="addfun">count加n</button>
+		</div>
+		
+		<script type="text/javascript">
+			var store = new Vuex.Store({
+				state:{
+					count:1
+				},
+				mutations:{
+					increment:function(state,n){
+						state.count+=n;
+					}
+				}
+			})
+			
+			var vm = new Vue({
+				el:"#app",
+				data:{},
+				computed:{
+					count:function(){
+						return this.$store.state.count;
+					}
+				},
+				methods:{
+					addfun:function(){
+						this.$store.commit('increment',2)
+					}
+				},
+				store:store
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/vuex.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="app">
+			获取store中的数据
+			<ul>
+				<li v-for="(item,index) in list" :key='index'>{{item}} </li>
+			</ul>
+			
+			显示小于20岁的名单
+			<ul>
+				<li v-for="(item,index) in less20" :key='index'>{{item}} </li>
+			</ul>
+			
+			子组件中的
+			<child></child>
+		</div>
+		
+		<script type="text/javascript">
+			var child = {
+				template:`<div>
+							<ul>
+								<li v-for='(item,index) in less20' :key='index'>{{item}}</li>
+							</ul>
+						</div>`,
+				computed:{
+					less20:function(){
+						return this.$store.state.list.filter(item=>item.age<20)
+					}
+				},
+			}
+			
+			var store = new Vuex.Store({
+				state:{
+					list:[
+						{'id':1,'name':'jack','age':20},
+						{'id':2,'name':'rose','age':22},
+						{'id':3,'name':'jerrey','age':19},
+						{'id':4,'name':'tom','age':16}
+					]
+				}
+			})		
+			var vm = new Vue({
+				el:'#app',
+				data:{},
+				computed:{
+					list:function(){
+						return this.$store.state.list;
+					},
+					less20:function(){
+						return this.$store.state.list.filter(item=>item.age<20)
+					}
+				},
+				store:store,
+				components:{child}
+			})
+		</script>
+	</body>
+</html>

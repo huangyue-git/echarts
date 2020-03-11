@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width"/>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/vue-router.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/vuex.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="//unpkg.com/element-ui@2.13.0/lib/index.js"></script>
+		<style type="text/css">
+			@import url("//unpkg.com/element-ui@2.13.0/lib/theme-chalk/index.css");
+		</style>
+		<style type="text/css">
+			*{margin: 0;padding: 0;}
+			ul,li{list-style: none;}
+			a{text-decoration: none;color: #000;}
+			.nav{height: 50px;line-height: 50px;text-align: center;width: 100%;background-color: lightcoral;
+			display: flex;flex-direction: row;flex-wrap: nowrap;justify-content: space-around;}
+			.nav a{text-decoration: none;color: white;}
+			#list ul li a{display: flex;flex-direction: row;flex-wrap: nowrap;width: 100%;justify-content: space-around;}
+			#list ul li a div:nth-of-type(1){width: 30%;}
+			#list ul li a div:nth-of-type(1) img{width:100%;}
+			#list ul li a div:nth-of-type(2) {width:65%;margin-top: 30px;}
+			.item div{width: 100%;}
+			.item div:nth-of-type(1){width: 100%;}
+			.item div:nth-of-type(1) img{width: 100%;}
+			.item div:nth-of-type(2){width: 100%;height: 50px;line-height: 50px;text-align: center;}
+			.item button{background-color: #ff3e68;height: 50px;line-height: 50px;text-align: center;
+				bottom: 0;position: fixed;width: 100%;padding: 0;font-size: 18px;color: white;}
+			.item a .cartbtn{width: 46px;height: 46px;background: white;border-radius: 50%;position:fixed;right: 15px;bottom: 70px;}
+			.item a .cartbtn img{width: 30px;text-align: center;margin-left: 10px;margin-top: 10px;}
+			.item a .cartbtn .num{left: 90%;bottom: 90px;position: fixed;}
+			.item a .cartbtn .count{width: 18px;height: 18px;background: #f53f50;border-radius: 50%;text-align: center;line-height: 18px;}
+			.item a .cartbtn .count span{color: white;font-size: 12px;}
+			.cart .text{width: 100%;height: 50px;line-height: 50px;text-align: center;margin-top: 50%;}
+			.cart a{width: 30%;height: 50px;line-height: 50px;text-align: center;background: lightsalmon;}
+			.cart a div{width: 30%;height: 50px;line-height: 50px;text-align: center;background: lightsalmon;margin-left: 35%;border-radius: 10px;}
+			.cart ul li{display: flex;flex-direction: row;flex-wrap: nowrap;justify-content: space-around;}
+			.cart ul li div:nth-of-type(1){width: 70%;height: 50px;margin-left: 5px;margin-top: 5px;}
+			.cart ul li div:nth-of-type(2){width: 30%;height: 50px;line-height: 50px;text-align: center;}
+			.cart ul li div:nth-of-type(2) button{width: 15px;}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<div class="nav">
+				<router-link to="/list">列表</router-link>
+				<router-link to="/cart">购物车</router-link>
+			</div>
+			
+			<router-view></router-view>
+		</div>
+		
+		<script type="text/javascript">
+			var {mapState,mapMutations,mapActions,mapGetters} = Vuex;			
+			var list = {
+				data:function(){
+					return {
+						list:[]
+					}
+				},
+				template:`<div id='list'>
+							<ul>
+								<li v-for='(item,index) in list'>
+									<router-link :to="'/item/'+item.item_id">
+										<div><img :src='item.over_image_url' alt='item.item_name'/></div>
+										<div>{{item.item_name}}</div>
+										
+									</router-link>
+								</li>
+							</ul>
+						</div>`,
+				mounted:function(){
+					axios.get('./json/list.json').then((res)=>{
+						console.log(res)
+						this.list = res.data.data.item_list;
+					})
+				}
+			}
+			var cart = {
+				data:function(){
+					return {
+						isnull:false
+					}
+				},
+				template:`<div class='cart'>
+							<template v-if='isnull'>
+								<div class='text'>你的购物车是空的</div>
+								<router-link to="/list"><div>去首页逛逛</div></router-link>
+							</template>
+							<template v-else>
+								<ul>
+									<li v-for="(item,index) in goods">
+										<div> 商品：{{item.sku_name}}</div>
+										<div><button @click="jianFun(item)">-</button> 数量：{{item.count}} <button @click="addFun(item)">+</button></div>
+									</li>
+								</ul>
+							</template>
+						</div>`,
+				computed:{
+					...mapState(['goods'])
+				},
+				mounted:function(){
+					if(this.goods.length==0){
+						this.isnull = true;
+					}
+				},
+				methods:{
+					// 数量加一
+					addFun:function(item){						
+						this.$store.dispatch('jia_item_count',item);
+						console.log(item.count);
+					},
+					// 数量减一
+					jianFun:function(item){
+						if(item.count>1){
+							this.$store.dispatch('jian_item_count',item);
+							console.log(item.count);
+						}						
+					}
+				}				
+			}
+			var item = {
+				data:function(){
+					return {
+						itemcon:{}
+					}
+				},
+				template:`<div class='item'>
+							<div><img :src='itemcon.sku_img_url'/></div>
+							<div>{{itemcon.sku_name}}</div>
+							<router-link to='/cart'>
+								<div class='cartbtn'>
+									<img src='./img/cart.png'/>
+									<div class='num' v-if='goods.length >0'><div class='count'><span>{{total}}</span></div></div>
+								</div>
+							</router-link>
+							<el-button class='addcart' @click='addcart(itemcon)' :plain="true">加入购物车</el-button>
+						</div>`,
+				mounted:function(){					
+					axios.get('./json/item_'+this.$route.params.item_id+'.json').then(res=>{
+						console.log(res);
+						this.itemcon = res.data.data.reviews[0];
+					})
+				},
+				computed:{
+					...mapState({
+						goods:state=>state.goods,
+						total:state=>state.total
+					})				
+				},
+				methods:{
+					addcart:function(item){						
+						item.count = 1;
+						item.item_id = this.$route.params.item_id;
+						this.$store.dispatch('add_cart',item);
+						this.$message({
+							  message: '已成功加入购物车',
+							  type: 'success',
+							  duration:500
+						});
+					}
+				}
+			}
+						
+			// 创建Vuex仓库
+			var store = new Vuex.Store({
+				state:{
+					goods:[],
+					total:0//记录总数
+				},
+				mutations:{
+					add:function(state,item){
+						state.goods.push(item);						
+						state.total++;//总数加1
+					},
+					update:function(state,arr){
+						state.goods = arr;							
+					},
+					jia:function(state,item){
+						item.count++;
+						state.total++;//总数加1
+					},
+					jian:function(state,item){
+						item.count--;
+						state.total--;//总数减1
+					}
+				},
+				actions:{
+					add_cart:function(context,item){
+						var type = true;
+						var newarr = [...this.state.goods];
+						for(var i = 0;i<newarr.length;i++){
+							if(newarr[i].item_id==item.item_id){
+								newarr[i].count++;	
+								this.state.total++;//总数加1
+								context.commit('update',newarr);
+								type =false;
+								break;
+							}
+						}						
+						if(type){
+							context.commit('add',item);
+							
+						}
+					},
+					jian_item_count:function(context,item){
+						var newarr = [...this.state.goods];
+						// console.log(item.count)
+						// if(item.count==1){							
+						// 	for(var i = 0;i < newarr.length;i++){
+						// 		if(newarr[i].item_id==item.item_id){
+						// 			index = i;
+						// 			newarr.splice(i,1);								
+						// 			context.commit('update',newarr);									
+						// 			break;
+						// 		}
+						// 	}
+						// }
+							context.commit('jian',item);
+							context.commit('update',newarr);
+							
+					},
+					jia_item_count:function(context,item){
+						var newarr = [...this.state.goods];
+						var index;
+						for(var i = 0;i < newarr.length;i++){
+							if(newarr[i].item_id==item.item_id){
+								index = i;
+								context.commit('jia',newarr[index]);
+								context.commit('update',newarr);									
+								break;
+							}
+						}						
+					}					
+				},
+				
+			})
+			
+			var routes = [
+				{path:'/list',component:list},
+				{path:'/cart',component:cart},
+				{path:'/item/:item_id',component:item},
+			]
+			
+			var router = new VueRouter({
+				routes:routes
+			})
+			var vm = new Vue({
+				el:"#app",
+				data:{},
+				router:router,
+				store:store
+			})
+		</script>
+	</body>
+</html>

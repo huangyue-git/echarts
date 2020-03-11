@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/vuex.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="app">
+			获取store中的数据{{count}}
+			<button @click="addfun">count加n</button>
+			<button @click="addprop">添加新属性</button>
+		</div>
+		
+		<script type="text/javascript">
+			// 创建一个常量
+			const INCREMENT = 'INCREMENT';
+			
+			var store = new Vuex.Store({
+				state:{
+					count:1
+				},
+				mutations:{
+					[INCREMENT]:function(state,n){
+						state.count+=n.num;
+					}
+				}
+			})
+			
+			var vm = new Vue({
+				el:"#app",
+				data:{},
+				computed:{
+					count:function(){
+						return this.$store.state.count;
+					}
+				},
+				methods:{
+					addfun:function(){
+						this.$store.commit({
+							type:INCREMENT,
+							num:4
+						})
+					},
+					addprop:function(){
+						this.$store.state.newprop = {...this.$store.state.newprop,newprop:'新属性'}
+					}
+				},
+				store:store
+			})
+		</script>
+	</body>
+</html>
